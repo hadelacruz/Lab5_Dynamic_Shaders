@@ -4,9 +4,8 @@ Simulación de un **sol** con animaciones procedurales usando shaders y funcione
 
 ## 🎥 Demostración en Video
 
-https://github.com/user-attachments/assets/Lab5.mp4
 
-**📹 [Descargar Lab5.mp4](./Lab5.mp4)**
+**https://youtu.be/QfwNnYGkfGQ**
 
 ---
 
