@@ -508,5 +508,4 @@ fn main() {
             .unwrap();
     }
     
-    println!("\n¡Gracias por ver el sol!");
 }
