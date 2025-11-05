@@ -429,35 +429,86 @@ fn main() {
     let (vertices, indices) = create_sphere(1.0, 15, 30);
     println!("✓ Esfera creada: {} vértices, {} triángulos", vertices.len(), indices.len());
     
-    println!("\nControles:");
-    println!("  ESC - Salir");
-    println!("\nRenderizando sol con shaders...");
-    println!("  - Sin texturas (todo procedural)");
-    println!("  - Animación basada en uniform time");
-    println!("  - EMISIÓN VARIABLE: Pulsaciones, llamaradas y picos de energía");
-    println!("  - Manchas solares rotatorias");
-    println!("  - Ciclo continuo de animación\n");
+    println!("\n╔═══════════════════════════════════════╗");
+    println!("║          CONTROLES 3D                 ║");
+    println!("╚═══════════════════════════════════════╝");
+    println!("  ROTACIÓN:");
+    println!("    ← → : Rotar horizontalmente");
+    println!("    ↑ ↓ : Rotar verticalmente");
+    println!("  ZOOM:");
+    println!("    + / W : Acercar cámara");
+    println!("    - / S : Alejar cámara");
+    println!("  OTROS:");
+    println!("    ESPACIO : Pausar/Reanudar animación");
+    println!("    ESC : Salir");
+    println!("  - Rotación interactiva");
+    println!("  - Zoom de cámara");
     
-    // Cámara
-    let eye = Vec3::new(0.0, 0.0, 3.5);
-    let center = Vec3::new(0.0, 0.0, 0.0);
-    let up = Vec3::new(0.0, 1.0, 0.0);
+    // Cámara con controles interactivos
+    let mut camera_distance = 3.5f32;
+    let mut camera_angle_x = 0.0f32; // Rotación horizontal
+    let mut camera_angle_y = 0.0f32; // Rotación vertical
+    let mut animation_paused = false;
     
     let mut time = 0.0f32;
     let mut frame_count = 0;
     let mut first_frame = true;
     
     while window.is_open() && !window.is_key_down(Key::Escape) {
-        time += 0.05; // INCREMENTO MÁS RÁPIDO para animación visible
+        // CONTROLES DE CÁMARA
+        
+        // Rotación horizontal (izquierda/derecha)
+        if window.is_key_down(Key::Left) {
+            camera_angle_x -= 0.05;
+        }
+        if window.is_key_down(Key::Right) {
+            camera_angle_x += 0.05;
+        }
+        
+        // Rotación vertical (arriba/abajo)
+        if window.is_key_down(Key::Up) {
+            camera_angle_y = (camera_angle_y - 0.05).clamp(-1.5, 1.5);
+        }
+        if window.is_key_down(Key::Down) {
+            camera_angle_y = (camera_angle_y + 0.05).clamp(-1.5, 1.5);
+        }
+        
+        // Zoom (acercar/alejar)
+        if window.is_key_down(Key::Equal) || window.is_key_down(Key::W) { // + o W
+            camera_distance = (camera_distance - 0.05).max(1.5);
+        }
+        if window.is_key_down(Key::Minus) || window.is_key_down(Key::S) { // - o S
+            camera_distance = (camera_distance + 0.05).min(10.0);
+        }
+        
+        // Pausar/reanudar animación
+        if window.is_key_pressed(Key::Space, minifb::KeyRepeat::No) {
+            animation_paused = !animation_paused;
+            println!("Animación: {}", if animation_paused { "PAUSADA" } else { "ACTIVA" });
+        }
+        
+        // Actualizar tiempo solo si no está pausado
+        if !animation_paused {
+            time += 0.05;
+        }
         frame_count += 1;
         
         framebuffer.clear(0x000000); // Fondo negro
         
-        // Matrices de transformación
+        // Calcular posición de la cámara basada en ángulos y distancia
+        let eye = Vec3::new(
+            camera_distance * camera_angle_y.cos() * camera_angle_x.sin(),
+            camera_distance * camera_angle_y.sin(),
+            camera_distance * camera_angle_y.cos() * camera_angle_x.cos(),
+        );
+        let center = Vec3::new(0.0, 0.0, 0.0);
+        let up = Vec3::new(0.0, 1.0, 0.0);
+        
+        // Matrices de transformación (sin rotación automática, control manual)
         let model_matrix = nalgebra_glm::rotate(
             &Mat4::identity(),
-            time * 0.3, // Rotación más rápida para ver movimiento
-            &Vec3::new(0.0, 1.0, 0.3)
+            time * 0.1, // Rotación lenta para mantener animación
+            &Vec3::new(0.0, 1.0, 0.0)
         );
         
         let view_matrix = look_at(&eye, &center, &up);

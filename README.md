@@ -2,6 +2,9 @@
 
 Simulación de un **sol** con animaciones procedurales usando shaders y funciones de ruido.
 
+# Vídeo del funcionamiento
+
+
 ## 🎯 Características Implementadas
 
 ### ✅ Criterios Cumplidos
