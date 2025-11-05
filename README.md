@@ -2,11 +2,11 @@
 
 Simulación de un **sol** con animaciones procedurales usando shaders y funciones de ruido.
 
-## 🎥 Vídeo del Funcionamiento
+## 🎥 Demostración en Video
 
-[![Ver Video](https://img.shields.io/badge/▶️-Ver%20Video-red?style=for-the-badge)](./Video_Lab5.webm)
+https://github.com/user-attachments/assets/Lab5.mp4
 
-[📹 Video_Lab5.webm](./Video_Lab5.webm)
+**📹 [Descargar Lab5.mp4](./Lab5.mp4)**
 
 ---
 
